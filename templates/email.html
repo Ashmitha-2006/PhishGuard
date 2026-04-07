@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishGuard — Email Scanner</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f1117;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        .container { text-align: center; max-width: 700px; width: 100%; }
+        .logo { font-size: 48px; margin-bottom: 10px; }
+        h1 { font-size: 42px; font-weight: 700; color: #00d4ff; margin-bottom: 10px; }
+        .tagline { font-size: 18px; color: #888; margin-bottom: 30px; }
+        .nav { display: flex; gap: 12px; justify-content: center; margin-bottom: 30px; }
+        .nav a {
+            padding: 10px 24px;
+            background: #1a1d2e;
+            border: 1px solid #2a2d3e;
+            border-radius: 8px;
+            color: #00d4ff;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        .nav a:hover { background: #2a2d3e; }
+        .nav a.active { border-color: #00d4ff; }
+        .scan-box {
+            background: #1a1d2e;
+            border: 1px solid #2a2d3e;
+            border-radius: 16px;
+            padding: 40px;
+        }
+        .scan-box h2 { font-size: 22px; margin-bottom: 8px; color: #ccc; }
+        .scan-box p { font-size: 14px; color: #666; margin-bottom: 24px; }
+        textarea {
+            width: 100%;
+            height: 220px;
+            padding: 16px;
+            font-size: 14px;
+            background: #0f1117;
+            border: 1px solid #2a2d3e;
+            border-radius: 10px;
+            color: #ffffff;
+            outline: none;
+            resize: vertical;
+            font-family: 'Segoe UI', sans-serif;
+            margin-bottom: 16px;
+        }
+        textarea:focus { border-color: #00d4ff; }
+        textarea::placeholder { color: #555; }
+        button {
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            background: #00d4ff;
+            color: #0f1117;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover { background: #00b8d9; }
+        .error { color: #ff4d4d; margin-top: 12px; font-size: 14px; }
+        .disclaimer { margin-top: 30px; font-size: 12px; color: #444; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">📧</div>
+        <h1>PhishGuard</h1>
+        <p class="tagline">Email phishing link detector</p>
+
+        <div class="nav">
+            <a href="/">URL Scanner</a>
+            <a href="/email" class="active">Email Scanner</a>
+        </div>
+
+        <div class="scan-box">
+            <h2>Paste suspicious email content</h2>
+            <p>We'll extract and scan all links found in the email automatically</p>
+            <form action="/email/scan" method="POST">
+                <textarea
+                    name="email_content"
+                    placeholder="Paste the full email content here including any links...
+
+Example:
+Dear Customer,
+Your account has been suspended. Click here to verify:
+http://paypal-secure-login.verify.com/account/update
+
+Act immediately or your account will be closed."
+                    required
+                ></textarea>
+                {% if error %}
+                <p class="error">{{ error }}</p>
+                {% endif %}
+                <button type="submit">Scan Email</button>
+            </form>
+        </div>
+        <p class="disclaimer">For educational and security research purposes only.</p>
+    </div>
+</body>
+</html>

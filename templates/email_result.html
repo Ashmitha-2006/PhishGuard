@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishGuard — Email Scan Result</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f1117;
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .header h1 { font-size: 32px; color: #00d4ff; margin-bottom: 8px; }
+        .header p { color: #666; font-size: 14px; }
+        .verdict-card {
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 24px;
+            border: 2px solid;
+        }
+        .verdict-card.green { background: #0a1f0a; border-color: #00cc44; }
+        .verdict-card.orange { background: #1f1400; border-color: #ff8800; }
+        .verdict-card.red { background: #1f0a0a; border-color: #ff4444; }
+        .verdict-label {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+        .verdict-card.green .verdict-label { color: #00cc44; }
+        .verdict-card.orange .verdict-label { color: #ff8800; }
+        .verdict-card.red .verdict-label { color: #ff4444; }
+        .verdict-summary { font-size: 15px; color: #ccc; line-height: 1.6; }
+        .stats-row { display: flex; gap: 16px; margin-bottom: 24px; }
+        .stat-box {
+            flex: 1;
+            background: #1a1d2e;
+            border: 1px solid #2a2d3e;
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+        }
+        .stat-number { font-size: 28px; font-weight: 700; }
+        .stat-label { font-size: 12px; color: #666; margin-top: 4px; }
+        .section-title { font-size: 18px; color: #00d4ff; margin-bottom: 16px; font-weight: 600; }
+        .url-card {
+            background: #1a1d2e;
+            border: 1px solid #2a2d3e;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        .url-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            gap: 12px;
+        }
+        .url-text {
+            font-size: 13px;
+            color: #aaa;
+            word-break: break-all;
+            flex: 1;
+            font-family: monospace;
+        }
+        .verdict-badge {
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .badge-green { background: #0d2e0d; color: #00cc44; border: 1px solid #00cc44; }
+        .badge-orange { background: #2e1a00; color: #ff8800; border: 1px solid #ff8800; }
+        .badge-red { background: #2e0d0d; color: #ff4444; border: 1px solid #ff4444; }
+        .badge-gray { background: #1a1d2e; color: #888; border: 1px solid #444; }
+        .score-line { font-size: 13px; color: #666; margin-bottom: 10px; }
+        .finding-mini {
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin-top: 6px;
+            border-left: 3px solid;
+        }
+        .finding-mini.High { background: #1f0a0a; border-color: #ff4444; color: #ff9999; }
+        .finding-mini.Medium { background: #1f1400; border-color: #ff8800; color: #ffbb66; }
+        .finding-mini.Low { background: #0a1a0a; border-color: #ffcc00; color: #ffee88; }
+        .no-urls { text-align: center; color: #666; padding: 40px; }
+        .back-btn {
+            display: block;
+            text-align: center;
+            padding: 14px;
+            background: #1a1d2e;
+            border: 1px solid #2a2d3e;
+            border-radius: 10px;
+            color: #00d4ff;
+            text-decoration: none;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        .back-btn:hover { background: #2a2d3e; }
+        @media (max-width: 600px) {
+            .stats-row { flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📧 PhishGuard</h1>
+            <p>Email Scan Results</p>
+        </div>
+
+        <div class="verdict-card {{ result.overall_color }}">
+            <div class="verdict-label">{{ result.overall_verdict }}</div>
+            <div class="verdict-summary">{{ result.overall_summary }}</div>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-number" style="color:#00d4ff">{{ result.urls_found }}</div>
+                <div class="stat-label">URLs Found</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" style="color:#ff4444">{{ result.dangerous_count }}</div>
+                <div class="stat-label">Phishing</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" style="color:#ff8800">{{ result.suspicious_count }}</div>
+                <div class="stat-label">Suspicious</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" style="color:#00cc44">{{ result.safe_count }}</div>
+                <div class="stat-label">Safe</div>
+            </div>
+        </div>
+
+        {% if result.urls %}
+        <p class="section-title">Link Analysis ({{ result.urls_scanned }} links scanned)</p>
+        {% for url_result in result.urls %}
+        <div class="url-card">
+            <div class="url-header">
+                <span class="url-text">{{ url_result.url }}</span>
+                <span class="verdict-badge badge-{{ url_result.color }}">
+                    {{ url_result.verdict }} — {{ url_result.score }}/100
+                </span>
+            </div>
+            <div class="score-line">{{ url_result.summary }}</div>
+            {% for finding in url_result.findings %}
+            <div class="finding-mini {{ finding.severity }}">
+                {{ finding.check }} — {{ finding.engine }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="no-urls">No URLs found in the email content.</div>
+        {% endif %}
+
+        <a href="/email" class="back-btn">Scan Another Email</a>
+        <a href="/" class="back-btn">Go to URL Scanner</a>
+    </div>
+</body>
+</html>

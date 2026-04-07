@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishGuard — Scan Result</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f1117;
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .header h1 { font-size: 32px; color: #00d4ff; margin-bottom: 8px; }
+        .scanned-url { color: #666; font-size: 14px; word-break: break-all; }
+        .verdict-card {
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            border: 2px solid;
+        }
+        .verdict-card.green { background: #0a1f0a; border-color: #00cc44; }
+        .verdict-card.orange { background: #1f1400; border-color: #ff8800; }
+        .verdict-card.red { background: #1f0a0a; border-color: #ff4444; }
+        .verdict-label { font-size: 48px; font-weight: 800; letter-spacing: 4px; margin-bottom: 12px; }
+        .verdict-card.green .verdict-label { color: #00cc44; }
+        .verdict-card.orange .verdict-label { color: #ff8800; }
+        .verdict-card.red .verdict-label { color: #ff4444; }
+        .verdict-score { font-size: 20px; color: #aaa; margin-bottom: 16px; }
+        .verdict-summary { font-size: 16px; color: #ccc; margin-bottom: 16px; line-height: 1.6; }
+        .recommendation { font-size: 15px; font-weight: 600; padding: 12px 20px; border-radius: 8px; display: inline-block; }
+        .verdict-card.green .recommendation { background: #0d2e0d; color: #00cc44; }
+        .verdict-card.orange .recommendation { background: #2e1a00; color: #ff8800; }
+        .verdict-card.red .recommendation { background: #2e0d0d; color: #ff4444; }
+        .section {
+            background: #1a1d2e;
+            border: 1px solid #2a2d3e;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 24px;
+        }
+        .section h3 { font-size: 18px; color: #00d4ff; margin-bottom: 20px; }
+        .engine-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .engine-item { background: #0f1117; border-radius: 10px; padding: 16px; }
+        .engine-name { font-size: 13px; color: #888; margin-bottom: 8px; }
+        .engine-score { font-size: 28px; font-weight: 700; }
+        .score-low { color: #00cc44; }
+        .score-mid { color: #ff8800; }
+        .score-high { color: #ff4444; }
+        .score-bar { height: 6px; background: #2a2d3e; border-radius: 3px; margin-top: 8px; overflow: hidden; }
+        .score-fill { height: 100%; border-radius: 3px; }
+        .fill-low { background: #00cc44; }
+        .fill-mid { background: #ff8800; }
+        .fill-high { background: #ff4444; }
+        .finding-item { padding: 14px 16px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid; }
+        .finding-item.High { background: #1f0a0a; border-color: #ff4444; }
+        .finding-item.Medium { background: #1f1400; border-color: #ff8800; }
+        .finding-item.Low { background: #0a1a0a; border-color: #ffcc00; }
+        .finding-item.Info { background: #0a0a1f; border-color: #4488ff; }
+        .finding-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .finding-check { font-size: 14px; font-weight: 600; }
+        .finding-badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+        .badge-High { background: #ff4444; color: #fff; }
+        .badge-Medium { background: #ff8800; color: #fff; }
+        .badge-Low { background: #ffcc00; color: #000; }
+        .badge-Info { background: #4488ff; color: #fff; }
+        .finding-explanation { font-size: 13px; color: #999; line-height: 1.5; }
+        .finding-engine { font-size: 11px; color: #555; margin-top: 4px; }
+        .stats-row { display: flex; gap: 16px; margin-bottom: 20px; }
+        .stat-box { flex: 1; background: #0f1117; border-radius: 10px; padding: 14px; text-align: center; }
+        .stat-number { font-size: 28px; font-weight: 700; }
+        .stat-label { font-size: 12px; color: #666; margin-top: 4px; }
+        .download-btn {
+            display: block;
+            text-align: center;
+            padding: 16px;
+            background: #00d4ff;
+            color: #0f1117;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 10px;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        .download-btn:hover { background: #00b8d9; }
+        .back-btn {
+            display: block;
+            text-align: center;
+            padding: 14px;
+            background: #1a1d2e;
+            border: 1px solid #2a2d3e;
+            border-radius: 10px;
+            color: #00d4ff;
+            text-decoration: none;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        .back-btn:hover { background: #2a2d3e; }
+        @media (max-width: 600px) {
+            .engine-grid { grid-template-columns: 1fr; }
+            .stats-row { flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ PhishGuard</h1>
+            <p class="scanned-url">Scanned: {{ url }}</p>
+        </div>
+        <div class="verdict-card {{ result.verdict_color }}">
+            <div class="verdict-label">{{ result.verdict }}</div>
+            <div class="verdict-score">Risk Score: {{ result.final_score }}/100</div>
+            <div class="verdict-summary">{{ result.summary }}</div>
+            <div class="recommendation">{{ result.recommendation }}</div>
+        </div>
+        <div class="section">
+            <h3>Engine Breakdown</h3>
+            <div class="engine-grid">
+                {% set engines = [
+                    ('URL Analyser', result.engine_scores.url_score),
+                    ('Brand Checker', result.engine_scores.brand_score),
+                    ('Page Analyser', result.engine_scores.page_score),
+                    ('ML Score', result.engine_scores.ml_score)
+                ] %}
+                {% for name, score in engines %}
+                <div class="engine-item">
+                    <div class="engine-name">{{ name }}</div>
+                    <div class="engine-score
+                        {% if score <= 30 %}score-low
+                        {% elif score <= 60 %}score-mid
+                        {% else %}score-high{% endif %}">
+                        {{ score }}/100
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-fill
+                            {% if score <= 30 %}fill-low
+                            {% elif score <= 60 %}fill-mid
+                            {% else %}fill-high{% endif %}"
+                            style="width: {{ score }}%">
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="section">
+            <h3>Findings Summary</h3>
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="stat-number" style="color:#ff4444">{{ result.high_count }}</div>
+                    <div class="stat-label">High</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" style="color:#ff8800">{{ result.medium_count }}</div>
+                    <div class="stat-label">Medium</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" style="color:#ffcc00">{{ result.low_count }}</div>
+                    <div class="stat-label">Low</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" style="color:#00d4ff">{{ result.total_flags }}</div>
+                    <div class="stat-label">Total Flags</div>
+                </div>
+            </div>
+            {% if result.all_findings %}
+                {% for finding in result.all_findings %}
+                <div class="finding-item {{ finding.severity }}">
+                    <div class="finding-header">
+                        <span class="finding-check">{{ finding.check }}</span>
+                        <span class="finding-badge badge-{{ finding.severity }}">
+                            {{ finding.severity }}
+                        </span>
+                    </div>
+                    <div class="finding-explanation">{{ finding.explanation }}</div>
+                    <div class="finding-engine">Detected by: {{ finding.engine }}</div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="color:#666; text-align:center; padding:20px">
+                    No suspicious findings detected.
+                </p>
+            {% endif %}
+        </div>
+        <a href="/download/{{ report_file }}" class="download-btn">
+            Download PDF Report
+        </a>
+        <a href="/" class="back-btn">Scan Another URL</a>
+    </div>
+</body>
+</html>
