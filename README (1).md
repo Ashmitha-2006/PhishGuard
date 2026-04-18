@@ -24,15 +24,16 @@
 ![Findings](screenshots/findings.png)
 
 ### 📄 Professional PDF Report
-![PDF Report](screenshots/pdf_report.png)
+![PDF Report](screenshots/pdf_report1.png)
+![PDF Report](screenshots/pdf_report2.png)
 
 ### 📧 Email Scanner
 ![Email Scanner](screenshots/email_scanner.png)
 
 ### ⚠️ Email — Phishing Detected
-![Email Results](screenshots/email_results.png)
+![Email Results](screenshots/email_results1.png)
+![Email Results](screenshots/email_results2.png)
 
----
 
 ## 🚀 Features
 
