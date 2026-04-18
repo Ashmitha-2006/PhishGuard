@@ -12,27 +12,27 @@
 ## 📸 Screenshots
 
 ### 🏠 Home — URL Scanner
-![Home Page](screenshots/home.png)
+![Home Page](home.png)
 
 ### 🔴 Phishing Verdict
-![Phishing Verdict](screenshots/phishing_verdict.png)
+![Phishing Verdict](phishing_verdict.png)
 
 ### 📊 Engine Breakdown
-![Engine Breakdown](screenshots/engine_breakdown.png)
+![Engine Breakdown](engine_breakdown.png)
 
 ### 🔍 Detailed Findings with Proof
-![Findings](screenshots/findings.png)
+![Findings](findings.png)
 
 ### 📄 Professional PDF Report
-![PDF Report](screenshots/pdf_report1.png)
-![PDF Report](screenshots/pdf_report2.png)
+![PDF Report](pdf_report1.png)
+![PDF Report](pdf_report2.png)
 
 ### 📧 Email Scanner
-![Email Scanner](screenshots/email_scanner.png)
+![Email Scanner](email_scanner.png)
 
 ### ⚠️ Email — Phishing Detected
-![Email Results](screenshots/email_results1.png)
-![Email Results](screenshots/email_results2.png)
+![Email Results](email_results1.png)
+![Email Results](email_results2.png)
 
 
 ## 🚀 Features
