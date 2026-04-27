@@ -67,6 +67,16 @@ PhishGuard runs **4 detection engines in parallel** using threading for maximum 
 - Returns overall verdict: **PHISHING DETECTED** / SUSPICIOUS / SAFE
 - Shows per-link analysis with individual findings
 
+## 🧠 Detection Pipeline
+
+1. URL Input  
+2. URL Analysis (length, structure, suspicious keywords)  
+3. Brand Check (detects spoofed domains like `g00gle.com`)  
+4. Page Analysis (HTML inspection, login form detection)  
+5. Risk Scoring Engine (weighted evaluation)  
+6. Final Classification → Safe / Suspicious / Malicious  
+
+
 ### 🔌 REST API
 Companies can integrate PhishGuard directly into their own systems:
 
@@ -302,7 +312,13 @@ Returns tool status and available endpoints.
 - **Security Awareness** — Demonstrate phishing tactics to educate employees
 - **Penetration Testers** — Assess brand impersonation and phishing infrastructure
 
----
+## 🧠 Core Capabilities
+
+- Multi-layer phishing detection design  
+- Risk-based decision systems  
+- Web threat analysis (URL, HTML, forms)  
+- Python-based security tool development  
+- Basic ML-assisted classification  
 
 ## 📄 PDF Report Sample
 
