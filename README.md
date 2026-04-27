@@ -345,11 +345,6 @@ This tool should only be used on URLs and emails where you have permission to pe
 
 [![GitHub](https://img.shields.io/badge/GitHub-Ashmitha--2006-black?style=flat&logo=github)](https://github.com/Ashmitha-2006)
 
----
-
-## 🔗 Related Projects
-
-- [Web Vulnerability Scanner](https://github.com/Ashmitha-2006/web_vuln_scanner) — Python-based web vulnerability scanner detecting XSS, SQL injection, security headers and more
 
 ---
 
